@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Testes com strings</title>
+	<script type="text/javascript" src="doctest.js"></script>
+	<!-- This stylesheet is optional, but does improve the output: -->
+	<link rel="stylesheet" type="text/css" href="doctest.css" />
+	<style type="text/css">
+	body {
+	  font-family: sans-serif;
+	}
+	</style>
+</head>
+
+<body class="autodoctest">
+<!-- the autotest class tells doctest to run the tests and fill
+in extra elements automatically -->
+<h1>Strings em JavaScript</h1>
+
+<div class="test">
+
+
+
+<h2>Atributos básicos de instâncias</h2>
+
+<h3><em>string</em>.length</h3>
+
+Comprimento da string, em caracteres.
+
+<pre class="doctest">
+$ s = "abacaxi"
+$ s.length
+7</pre>
+
+
+<a id="getitem" />
+<h3><em>string</em>[«índice»] <sup>ES5</sup></h3>
+
+Caractere na posição «índice» da string, ou <code>undefined</code>, se 
+o «índice» está fora dos limites da string. Ver também
+<a href="#getitem"><em>string</em>.charAt(«índice»)</a>.
+
+<pre class="doctest">
+$ s = "abacaxi"
+$ s[3]
+"c"
+$ typeof s[20]
+"undefined"
+$ typeof s[-2]
+"undefined"</pre>
+
+<h2>Métodos herdados de <code>String.prototype</code></h2>
+
+<a id="charAt" />
+<h3><em>string</em>.charAt(«índice»)</h3>
+
+Devolve o caractere na posição «índice» da string ou "" (uma string 
+vazia), se o o «índice» está fora dos limites da string. Ver também
+<a href="#getitem"><em>string</em>[«índice»]</a>.
+
+<pre class="doctest">
+$ s = "abacaxi"
+$ s.charAt(1)
+"b"
+$ s.charAt(-1)
+""
+$ typeof s.charAt(-1)
+"string"</pre>
+
+<p class="vt">Veja também: <a href="#getitem"><em>string</em>[«índice»]</a></p>
+
+<h3><em>string</em>.charCodeAt(«índice»)</h3>
+
+Código Unicode do caracter na posição «índice».
+
+<pre class="doctest">
+$ s = "ABC"
+$ s.charCodeAt(1) // letra B
+66
+$ s.charCodeAt(10) // não há posição 10, resultado "Not a Number"
+NaN
+$ "☂".charCodeAt(0).toString(16) // Unicode em hexadecimal
+"2602"</pre>
+
+
+<h3><em>string</em>.concat([«string2» [ , «string3» [ , ... ] ] ] »)</h3>
+
+Devolve uma nova string formada pela concatenação da instância 
+<em>string</em> aos argumentos «string2», «string2» etc.
+
+<pre class="doctest">
+$ s = "ABC"
+$ s.concat('xyz', '!')
+"ABCxyz!"</pre>
+
+<h3><em>string</em>.indexOf(«subString» [, «índice»])</h3>
+
+Devolve a posição da primeira ocorrência «subString» em 
+<em>string</em>, ou -1 caso não ocorra. O argumento opcional «índice» 
+determina a posição inicial da procura.
+
+<pre class="doctest">
+$ s = "banana"
+$ s.indexOf('na')
+2
+$ s.indexOf('na', 3)
+4
+$ s.indexOf('ab', 3)
+-1</pre>
+
+<h3><em>string</em>.lastIndexOf(«subString» [, «índice»])</h3>
+
+Devolve a posição da última ocorrência «subString» em 
+<em>string</em>, ou -1 caso não ocorra. O argumento opcional «índice» 
+determina a posição inicial da procura.
+
+<pre class="doctest">
+$ s = "banana"
+$ s.lastIndexOf('na')
+4
+$ s.lastIndexOf('na', 3)
+2
+$ s.lastIndexOf('ab', 3)
+-1</pre>
+
+<h3><em>string</em>.localeCompare(«string2»)</h3>
+
+Compara alfabeticamente <em>string</em> com «string2», considerando
+as regras de ordenação do locale -- a configuração local do ambiente
+onde o interpretador JavaScript está sendo executada. Devolve um número
+negativo se <em>string</em> precede «string2» na ordem alfabética,
+positivo se <em>string</em> sucede «string2», ou zero se as strings são
+iguais.
+
+<pre class="doctest">
+$ s0 = "abacate"
+$ s1 = "Avião"
+$ s2 = "Aviso"
+$ s0.localeCompare(s1) &lt; 0 // "abacate" vem antes de "Avião"
+true
+$ s1.localeCompare(s2) &lt; 0 // "Avião" vem antes de "Aviso"
+true
+$ s2.localeCompare(s1) > 0
+true
+$ s1.localeCompare(s1.toLowerCase()) > 0 // maiúscula vem depois de minúscula
+true
+$ s0 &lt; s1 // operador &lt; compara códigos Unicode, e não alfabeticamente
+false
+$ s1 &lt; s2 // veja observação abaixo
+false
+</pre>
+
+<dl>
+<dt>Observação:</dt><dd>Os operadores primitivos &lt;, >, &lt;= e >= comparam
+os códigos Unicode das duas sequências de caracteres, e não levam em conta
+as regras de ordenação alfabética convencionais.</dd>
+</dl>
+
+
+<h3><em>string</em>.match(«regexp»)</h3>
+<h3><em>string</em>.replace(«searchValue», «replaceValue»)</h3>
+<h3><em>string</em>.search(«regexp»)</h3>
+<h3><em>string</em>.slice(«start», «end»)</h3>
+<h3><em>string</em>.split(«separator», «limit»)</h3>
+<h3><em>string</em>.substring («start», «end»)</h3>
+<h3><em>string</em>.toLowerCase()</h3>
+<h3><em>string</em>.toLocaleLowerCase()</h3>
+<h3><em>string</em>.toUpperCase()</h3>
+<h3><em>string</em>.toLocaleUpperCase()</h3>
+<h3><em>string</em>.trim()</h3></h3>
+
+
+
+<h2>Atributos do objeto global <code>String</code></h2>
+
+<h3>String.fromCharCode(«código1» [, «código2» [, ... ] ] )</h3>
+
+Devolve uma string primitiva construída a partir de um ou mais códigos 
+Unicode.
+
+<pre class="doctest">
+$ String.fromCharCode(65, 66, 67)
+"ABC"
+$ String.fromCharCode(0x2660, 0x2661, 0x2662, 0x2663)
+"♠♡♢♣"</pre>
+
+<h3><em>string</em>.constructor</h3>
+<h3><em>string</em>.property</h3>
+<h3><em>string</em>.toString()</h3>
+<h3><em>string</em>.valueOf()</h3>
+
+
+</div>
+
+</body></html>
