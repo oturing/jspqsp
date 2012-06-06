@@ -18,19 +18,33 @@
 in extra elements automatically -->
 <h1>Strings em JavaScript</h1>
 
-<div class="test">
-	
 Existem dois tipos de strings em JavaScript: strings primitivas, e
-instâncias de <code>String</code>. Strings primitivas são construídas
+objetos <code>String</code>. Strings primitivas são construídas
 a partir de literais entre aspas simples ou duplas, ou invocando
 diretamente o objeto global <code>String</code> como uma função (sem 
-usar o operador <code>new</code>. Instâncias de <code>String()</code> 
+usar o operador <code>new</code>). Instâncias de <code>String()</code> 
 são criadas invocando <code>new String()</code>. 
 
+<div class="test">
 <pre class="doctest">
-$ s0 = "ABC"
-$ s1 = String("ABC")
-$ s2 = new String("ABC")
+$ s0 = "ABC"             // string primitiva
+$ typeof s0
+"string"
+
+$ s1 = String("ABC")     // string primitiva
+$ typeof s1
+"string"
+
+$ s2 = new String("ABC") // objeto String
+$ typeof s2
+"object"</pre>
+</div>
+
+Os operadores == e === produzem os seguintes resultados ao comparar
+strings primitivas e objetos String:
+
+<div class="test">
+<pre class="doctest">
 $ s0 === s1
 true
 $ s1 === s2
@@ -40,32 +54,59 @@ true
 $ s1 === "ABC"
 true
 $ s2 === new String("ABC")
-false
-</pre>
+false</pre>
 </div>
-<div class="test">
-Em muitas situações o interpretador JavaScript converte 
-automaticamente entre estes dois tipos de strings. Em particular, 
-quando se tenta acessar qualquer atributo (propriedade ou método) em 
-uma string primitiva, um objeto String é criado temporariamente, e é 
-este objeto que na verdade acaba sendo acessado. É por isso que no 
-exemplo abaixo a atribuição <code>s1.sabor = "morango"</code> fica 
-sem efeito: o atributo <code>sabor</code> é criado em um objeto 
-String temporário criado a partir de <code>s1</code>, e não 
-diretamente em <code>s1</code>. Ao fazer o mesmo em <code>s2</code>, 
-o atributo é preservado.
 
+Muitos métodos de objetos String devolvem strings primitivas como 
+resultado. Por, exemplo o método <code>concat</code>, aplicado sobre 
+um objeto String, mesmo quando recebe como argumento outro objeto 
+String, devolve uma string primitiva:
+
+<div class="test">
 <pre class="doctest">
-$ s1.sabor = "morango"
-$ typeof s1.sabor
-"undefined"
-$ s2.sabor = "morango"
-$ s2.sabor
-"morango"
-$ typeof s2.sabor
-"string"
-</pre>
+$ s = new String("ABC")
+$ s.concat(new String('xyz'))
+"ABCxyz"
+$ typeof s.concat(new String('xyz'))
+"string"</pre>
 </div>
+
+Em algumas situações o interpretador JavaScript converte 
+automaticamente entre estes dois tipos de strings. Strings 
+primitivas não possuem atributos (propriedades ou métodos). Quando 
+se tenta acessar qualquer atributo em uma string primitiva, um 
+objeto String é criado temporariamente, e é este objeto que na 
+verdade acaba sendo acessado (em Java, o mecanismo semelhante de 
+conversão automática de tipos primitivos para objetos chama-se 
+autoboxing). 
+
+É por isso que no exemplo abaixo a atribuição <code>s1.sabor = 
+"morango"</code> acaba não surtindo efeito: o atributo <code>sabor 
+</code> é criado em um objeto String temporário criado a partir de 
+<code>s1 </code>, e não diretamente em <code>s1</code>. Ao fazer o 
+mesmo em <code>s2</code>, o atributo é preservado.
+
+<div class="test">
+<pre class="doctest">
+$ s1 = "ABC"     // string primitiva
+$ s1.sabor = "morango"
+$ a1 = []
+$ for (prop in s1) a1.push(prop)
+$ a1 
+["0", "1", "2"]</pre>
+</div>
+
+A mesma atribuição, quando feita a um objeto String, funciona:
+<div class="test">
+<pre class="doctest">
+$ s2 = new String("ABC") // objeto String
+$ s2.sabor = "morango"
+$ a2 = []
+$ for (prop in s2) a2.push(prop)
+$ a2.sort()  // necessário ordenar, pois a ordem das propriedades é indefinida 
+["0", "1", "2", "sabor"]</pre>
+</div>
+
 
 
 <h2>Atributos básicos de instâncias</h2>
@@ -192,35 +233,44 @@ negativo se <em>string</em> precede «string2» na ordem alfabética,
 positivo se <em>string</em> sucede «string2», ou zero se as strings são
 iguais.
 
+Este método serve para complementar os operadores primitivos &lt;, 
+>, &lt;= e >= que apenas comparam os códigos Unicode das duas 
+sequências de caracteres, e sem levar em conta as regras de 
+ordenação alfabética convencionais.</dd> </dl>
+
+Veja como o operador &lt; não respeita a ordem alfabética:
+
 <div class="test">
 <pre class="doctest">
 $ s0 = "abacate"
 $ s1 = "Avião"
 $ s2 = "Aviso"
-$ s0.localeCompare(s1) &lt; 0 // "abacate" vem antes de "Avião"
-true
-$ s1.localeCompare(s2) &lt; 0 // "Avião" vem antes de "Aviso"
-true
-$ s2.localeCompare(s1) > 0
-true
-$ s1.localeCompare(s1.toLowerCase()) > 0 // maiúscula vem depois de minúscula
-true
-$ s0 &lt; s1 // operador &lt; compara códigos Unicode, e não alfabeticamente
+$ s0 &lt; s1 // porque o código de "a" é 97, e "A" é 65  
 false
-$ s1 &lt; s2 // veja observação abaixo
+$ s1 &lt; s2 // porque o código de "ã" é 227, e "s" é 115  
 false
 </pre>
 </div>
 
-<dl>
-<dt>Observação:</dt><dd>Os operadores primitivos &lt;, >, &lt;= e >= comparam
-os códigos Unicode das duas sequências de caracteres, e não levam em conta
-as regras de ordenação alfabética convencionais.</dd>
-</dl>
+Em contraste, o método <code>localeCompare</code> funciona como 
+esperado, mas não em todos os navegadores. (LR: testei no Firefox 12, 
+no Opera 9 e no Chromium 18; os testes funcionarm nos dois primeiros,
+mas não no Chromium)
 
+<div class="test">
+<pre class="doctest">
+$ s0.localeCompare(s1) &lt; 0 // "abacate" vem antes de "Avião"
+true
+$ s1.localeCompare(s2) &lt; 0 // "Avião" vem antes de "Aviso"
+true
+</pre>
+</div>
 
-<h3><em>string</em>.match(«regexp»)</h3>
+<h2>Métodos com expressões regulares</h2>
+
 <h3><em>string</em>.replace(«searchValue», «replaceValue»)</h3>
+<h3><em>string</em>.match(«regexp»)</h3>
+
 <h3><em>string</em>.search(«regexp»)</h3>
 <h3><em>string</em>.slice(«start», «end»)</h3>
 <h3><em>string</em>.split(«separator», «limit»)</h3>
