@@ -19,7 +19,53 @@ in extra elements automatically -->
 <h1>Strings em JavaScript</h1>
 
 <div class="test">
+	
+Existem dois tipos de strings em JavaScript: strings primitivas, e
+instâncias de <code>String</code>. Strings primitivas são construídas
+a partir de literais entre aspas simples ou duplas, ou invocando
+diretamente o objeto global <code>String</code> como uma função (sem 
+usar o operador <code>new</code>. Instâncias de <code>String()</code> 
+são criadas invocando <code>new String()</code>. 
 
+<pre class="doctest">
+$ s0 = "ABC"
+$ s1 = String("ABC")
+$ s2 = new String("ABC")
+$ s0 === s1
+true
+$ s1 === s2
+false
+$ s1 == s2
+true
+$ s1 === "ABC"
+true
+$ s2 === new String("ABC")
+false
+</pre>
+</div>
+<div class="test">
+Em muitas situações o interpretador JavaScript converte 
+automaticamente entre estes dois tipos de strings. Em particular, 
+quando se tenta acessar qualquer atributo (propriedade ou método) em 
+uma string primitiva, um objeto String é criado temporariamente, e é 
+este objeto que na verdade acaba sendo acessado. É por isso que no 
+exemplo abaixo a atribuição <code>s1.sabor = "morango"</code> fica 
+sem efeito: o atributo <code>sabor</code> é criado em um objeto 
+String temporário criado a partir de <code>s1</code>, e não 
+diretamente em <code>s1</code>. Ao fazer o mesmo em <code>s2</code>, 
+o atributo é preservado.
+
+<pre class="doctest">
+$ s1.sabor = "morango"
+$ typeof s1.sabor
+"undefined"
+$ s2.sabor = "morango"
+$ s2.sabor
+"morango"
+$ typeof s2.sabor
+"string"
+</pre>
+</div>
 
 
 <h2>Atributos básicos de instâncias</h2>
@@ -28,11 +74,12 @@ in extra elements automatically -->
 
 Comprimento da string, em caracteres.
 
+<div class="test">
 <pre class="doctest">
 $ s = "abacaxi"
 $ s.length
 7</pre>
-
+</div>
 
 <a id="getitem" />
 <h3><em>string</em>[«índice»] <sup>ES5</sup></h3>
@@ -41,6 +88,7 @@ Caractere na posição «índice» da string, ou <code>undefined</code>, se
 o «índice» está fora dos limites da string. Ver também
 <a href="#getitem"><em>string</em>.charAt(«índice»)</a>.
 
+<div class="test">
 <pre class="doctest">
 $ s = "abacaxi"
 $ s[3]
@@ -49,6 +97,7 @@ $ typeof s[20]
 "undefined"
 $ typeof s[-2]
 "undefined"</pre>
+</div>
 
 <h2>Métodos herdados de <code>String.prototype</code></h2>
 
@@ -59,6 +108,7 @@ Devolve o caractere na posição «índice» da string ou "" (uma string
 vazia), se o o «índice» está fora dos limites da string. Ver também
 <a href="#getitem"><em>string</em>[«índice»]</a>.
 
+<div class="test">
 <pre class="doctest">
 $ s = "abacaxi"
 $ s.charAt(1)
@@ -67,6 +117,7 @@ $ s.charAt(-1)
 ""
 $ typeof s.charAt(-1)
 "string"</pre>
+</div>
 
 <p class="vt">Veja também: <a href="#getitem"><em>string</em>[«índice»]</a></p>
 
@@ -74,6 +125,7 @@ $ typeof s.charAt(-1)
 
 Código Unicode do caracter na posição «índice».
 
+<div class="test">
 <pre class="doctest">
 $ s = "ABC"
 $ s.charCodeAt(1) // letra B
@@ -82,6 +134,7 @@ $ s.charCodeAt(10) // não há posição 10, resultado "Not a Number"
 NaN
 $ "☂".charCodeAt(0).toString(16) // Unicode em hexadecimal
 "2602"</pre>
+</div>
 
 
 <h3><em>string</em>.concat([«string2» [ , «string3» [ , ... ] ] ] »)</h3>
@@ -89,10 +142,12 @@ $ "☂".charCodeAt(0).toString(16) // Unicode em hexadecimal
 Devolve uma nova string formada pela concatenação da instância 
 <em>string</em> aos argumentos «string2», «string2» etc.
 
+<div class="test">
 <pre class="doctest">
 $ s = "ABC"
 $ s.concat('xyz', '!')
 "ABCxyz!"</pre>
+</div>
 
 <h3><em>string</em>.indexOf(«subString» [, «índice»])</h3>
 
@@ -100,6 +155,7 @@ Devolve a posição da primeira ocorrência «subString» em
 <em>string</em>, ou -1 caso não ocorra. O argumento opcional «índice» 
 determina a posição inicial da procura.
 
+<div class="test">
 <pre class="doctest">
 $ s = "banana"
 $ s.indexOf('na')
@@ -108,6 +164,7 @@ $ s.indexOf('na', 3)
 4
 $ s.indexOf('ab', 3)
 -1</pre>
+</div>
 
 <h3><em>string</em>.lastIndexOf(«subString» [, «índice»])</h3>
 
@@ -115,6 +172,7 @@ Devolve a posição da última ocorrência «subString» em
 <em>string</em>, ou -1 caso não ocorra. O argumento opcional «índice» 
 determina a posição inicial da procura.
 
+<div class="test">
 <pre class="doctest">
 $ s = "banana"
 $ s.lastIndexOf('na')
@@ -123,6 +181,7 @@ $ s.lastIndexOf('na', 3)
 2
 $ s.lastIndexOf('ab', 3)
 -1</pre>
+</div>
 
 <h3><em>string</em>.localeCompare(«string2»)</h3>
 
@@ -133,6 +192,7 @@ negativo se <em>string</em> precede «string2» na ordem alfabética,
 positivo se <em>string</em> sucede «string2», ou zero se as strings são
 iguais.
 
+<div class="test">
 <pre class="doctest">
 $ s0 = "abacate"
 $ s1 = "Avião"
@@ -150,6 +210,7 @@ false
 $ s1 &lt; s2 // veja observação abaixo
 false
 </pre>
+</div>
 
 <dl>
 <dt>Observação:</dt><dd>Os operadores primitivos &lt;, >, &lt;= e >= comparam
@@ -179,11 +240,13 @@ as regras de ordenação alfabética convencionais.</dd>
 Devolve uma string primitiva construída a partir de um ou mais códigos 
 Unicode.
 
+<div class="test">
 <pre class="doctest">
 $ String.fromCharCode(65, 66, 67)
 "ABC"
 $ String.fromCharCode(0x2660, 0x2661, 0x2662, 0x2663)
 "♠♡♢♣"</pre>
+</div>
 
 <h3><em>string</em>.constructor</h3>
 <h3><em>string</em>.property</h3>
@@ -191,6 +254,5 @@ $ String.fromCharCode(0x2660, 0x2661, 0x2662, 0x2663)
 <h3><em>string</em>.valueOf()</h3>
 
 
-</div>
 
 </body></html>
